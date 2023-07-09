@@ -15,7 +15,7 @@ export default function AuthLayout({
         />
       </div>
 
-      <main className="md:max-w-lg md:rounded-xl md:bg-white md:p-10">
+      <main className="md:w-full md:max-w-lg md:rounded-xl md:bg-white md:p-10">
         {children}
       </main>
     </div>
