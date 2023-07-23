@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Instrument_Sans } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const instrument = Instrument_Sans({
   variable: "--font-instrument",
@@ -18,12 +19,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body
-        className={`${instrument.variable} min-h-screen bg-gray-50 font-sans text-base font-normal text-gray-900 antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${instrument.variable} min-h-screen bg-gray-50 font-sans text-base font-normal text-gray-900 antialiased`}
+        >
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
