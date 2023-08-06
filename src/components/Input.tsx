@@ -11,7 +11,7 @@ type InputProps = {
 } & Omit<InputHTMLAttributes<HTMLInputElement>, "id">;
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, id, type, icon, error, ...rest }, ref) => {
+  ({ label, id, type, icon, error, className, ...rest }, ref) => {
     return (
       <div>
         <label htmlFor={id} className="text-xs">
@@ -23,7 +23,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {
               "border-red-500 focus-within:border-red-500 focus-within:shadow-none":
                 error,
-            }
+            },
+            className
           )}
         >
           {icon && icon}
