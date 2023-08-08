@@ -9,7 +9,7 @@ export default function RootLayout({
 }) {
   return (
     <>
-      <header className="flex items-center justify-between bg-white py-4 pl-6 pr-4 md:py-10 md:pl-12 md:pr-8">
+      <header className="flex items-center justify-between bg-white py-4 pl-6 pr-4 md:pb-4 md:pl-12 md:pr-8 md:pt-10">
         <Image
           src="/assets/images/logo-devlinks-small.svg"
           height={32}
@@ -46,7 +46,18 @@ export default function RootLayout({
         </Link>
       </header>
 
-      <main className="p-4">{children}</main>
+      <div className="lg:flex lg:gap-6 lg:pl-6">
+        <div className="my-6 hidden w-full max-w-lg items-center justify-center rounded-xl bg-white lg:flex">
+          <Image
+            src="/assets/images/illustration-phone-mockup.svg"
+            alt=""
+            height={632}
+            width={308}
+          />
+        </div>
+
+        <main className="p-4 md:p-6 lg:flex-1 lg:pl-0">{children}</main>
+      </div>
     </>
   );
 }

@@ -61,16 +61,16 @@ export function ProfileForm() {
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <form onSubmit={handleSave}>
-      <div className="flex flex-col gap-10 rounded-xl rounded-b-none bg-white p-6">
+      <div className="flex flex-col gap-10 rounded-xl rounded-b-none bg-white p-6 md:p-10">
         <section className="flex flex-col gap-2">
-          <h1 className="text-2xl font-bold">Profile Details</h1>
+          <h1 className="text-2xl font-bold md:text-3xl">Profile Details</h1>
           <p className="text-gray-700">
             Add your details to create a personal touch to your profile.
           </p>
         </section>
 
-        <section className="flex flex-col gap-4 rounded-xl bg-gray-50 p-5">
-          <span className="text-gray-700">Profile picture</span>
+        <section className="flex flex-col gap-4 rounded-xl bg-gray-50 p-5 md:flex-row md:items-center md:gap-6">
+          <span className="block flex-1 text-gray-700">Profile picture</span>
           <div
             {...getRootProps()}
             className={classNames(
@@ -118,28 +118,34 @@ export function ProfileForm() {
               {fileToUpload ? "Change Image" : "+ Upload Image"}
             </p>
           </div>
-          <span className="mt-2 block text-xs text-gray-700">
+          <span className="mt-2 block text-xs text-gray-700 md:max-w-[128px] lg:max-w-[215px]">
             Image must be below 1024x1024px. Use PNG or JPG format.
           </span>
         </section>
 
-        <section className="flex flex-col gap-3 rounded-xl bg-gray-50 p-5">
+        <section className="flex flex-col gap-3 rounded-xl bg-gray-50 p-5 md:mb-28 lg:mb-12">
           <Input
-            className="bg-white"
+            className="bg-white md:w-80 lg:w-[400px]"
+            containerClassName="md:flex md:items-center md:justify-between"
+            labelClassName="md:text-base md:text-gray-700"
             label="First name*"
             id="firstName"
             {...register("firstName")}
             error={errors.firstName?.message as string}
           />
           <Input
-            className="bg-white"
+            className="bg-white md:w-80 lg:w-[400px]"
+            containerClassName="md:flex md:items-center md:justify-between"
+            labelClassName="md:text-base md:text-gray-700"
             label="Last name*"
             id="lastName"
             {...register("lastName")}
             error={errors.lastName?.message as string}
           />
           <Input
-            className="bg-white"
+            className="bg-white md:w-80 lg:w-[400px]"
+            containerClassName="md:flex md:items-center md:justify-between"
+            labelClassName="md:text-base md:text-gray-700"
             label="Email"
             id="email"
             type="email"
@@ -151,8 +157,10 @@ export function ProfileForm() {
 
       <hr className="border-gray-300" />
 
-      <div className="rounded-xl rounded-t-none bg-white p-4">
-        <Button type="submit">Save</Button>
+      <div className="rounded-xl rounded-t-none bg-white p-4 md:flex md:justify-end md:px-10 md:py-6">
+        <Button className="md:w-auto md:px-7" type="submit">
+          Save
+        </Button>
       </div>
     </form>
   );

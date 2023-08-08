@@ -8,13 +8,28 @@ type InputProps = {
   id: string;
   icon?: JSX.Element;
   error?: string;
+  containerClassName?: string;
+  labelClassName?: string;
 } & Omit<InputHTMLAttributes<HTMLInputElement>, "id">;
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, id, type, icon, error, className, ...rest }, ref) => {
+  (
+    {
+      label,
+      id,
+      type,
+      icon,
+      error,
+      className,
+      containerClassName,
+      labelClassName,
+      ...rest
+    },
+    ref
+  ) => {
     return (
-      <div>
-        <label htmlFor={id} className="text-xs">
+      <div className={containerClassName}>
+        <label htmlFor={id} className={classNames("text-xs", labelClassName)}>
           {label}
         </label>
         <div
