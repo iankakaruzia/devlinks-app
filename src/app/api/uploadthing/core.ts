@@ -1,4 +1,7 @@
+import { db } from "@/db";
+import { profiles } from "@/db/schema";
 import { currentUser } from "@clerk/nextjs";
+import { eq } from "drizzle-orm";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 
 const f = createUploadthing();
@@ -12,11 +15,15 @@ export const profileFileRouter = {
 
       return { userId: user.id };
     })
-    .onUploadComplete(({ metadata, file }) => {
-      // TODO: save file.url to user profile
+    .onUploadComplete(async ({ metadata, file }) => {
       console.log("Upload complete for userId:", metadata.userId);
 
       console.log("file url", file.url);
+
+      await db
+        .update(profiles)
+        .set({ profilePicture: file.url })
+        .where(eq(profiles.userId, metadata.userId));
     }),
 } satisfies FileRouter;
 

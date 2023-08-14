@@ -10,13 +10,11 @@ import { useCallback, useState } from "react";
 import classNames from "classnames";
 import { useUploadThing } from "@/utils/uploadthing";
 
-const schema = z
-  .object({
-    email: z.string().email(),
-    firstName: z.string().min(1, "Can't be empty"),
-    lastName: z.string().min(1, "Can't be empty"),
-  })
-  .required();
+const schema = z.object({
+  email: z.string().email().optional(),
+  firstName: z.string().min(1, "Can't be empty"),
+  lastName: z.string().min(1, "Can't be empty"),
+});
 
 export function ProfileForm() {
   const {
