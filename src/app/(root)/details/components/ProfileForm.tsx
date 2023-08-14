@@ -9,6 +9,8 @@ import Image from "next/image";
 import { useCallback, useState } from "react";
 import classNames from "classnames";
 import { useUploadThing } from "@/utils/uploadthing";
+import toast from "react-hot-toast";
+import type { Profile } from "@/app/types/profile";
 
 const schema = z.object({
   email: z.string().email().optional(),
@@ -16,7 +18,11 @@ const schema = z.object({
   lastName: z.string().min(1, "Can't be empty"),
 });
 
-export function ProfileForm() {
+type ProfileFormProps = {
+  profile: Profile;
+};
+
+export function ProfileForm({ profile }: ProfileFormProps) {
   const {
     register,
     handleSubmit,
@@ -24,6 +30,11 @@ export function ProfileForm() {
   } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     mode: "all",
+    defaultValues: {
+      email: profile.email ?? "",
+      firstName: profile.firstName ?? "",
+      lastName: profile.lastName ?? "",
+    },
   });
   const [fileToUpload, setFileToUpload] = useState<File | null>(null);
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
@@ -38,23 +49,31 @@ export function ProfileForm() {
     multiple: false,
     onDrop,
   });
-  const { startUpload } = useUploadThing("profileUploader", {
-    onClientUploadComplete: () => {
-      alert("uploaded successfully!");
-    },
-    onUploadError: () => {
-      alert("error occurred while uploading");
-    },
-  });
+  const { startUpload } = useUploadThing("profileUploader");
 
   const handleSave = handleSubmit(async (data) => {
-    // TODO: Save data
-    console.log({ data });
-
-    if (fileToUpload) {
-      await startUpload([fileToUpload]);
+    if (fileToUpload && !profile.profilePicture) {
+      await toast.promise(startUpload([fileToUpload]), {
+        loading: "Uploading profile picture...",
+        success: <b>Successfully uploaded the profile picture</b>,
+        error: (
+          <b>
+            Something went wrong when uploading the profile picture, please try
+            again later...
+          </b>
+        ),
+      });
     }
+
+    await fetch("/api/profiles", {
+      method: "PATCH",
+      body: JSON.stringify({
+        ...data,
+      }),
+    });
   });
+
+  const hasProfileImage = fileToUpload || profile.profilePicture;
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -74,15 +93,19 @@ export function ProfileForm() {
             className={classNames(
               "relative flex h-[193px] w-[193px] flex-col items-center justify-center overflow-hidden rounded-xl",
               {
-                "bg-purple-100": !fileToUpload,
+                "bg-purple-100": !hasProfileImage,
                 "after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-full after:rounded-xl after:bg-black after:bg-opacity-50":
-                  fileToUpload,
+                  hasProfileImage,
               }
             )}
           >
-            {fileToUpload && (
+            {hasProfileImage && (
               <Image
-                src={URL.createObjectURL(fileToUpload)}
+                src={
+                  fileToUpload
+                    ? URL.createObjectURL(fileToUpload)
+                    : (profile.profilePicture as string)
+                }
                 fill
                 alt="Profile picture"
                 className="object-cover"
@@ -93,8 +116,8 @@ export function ProfileForm() {
               className={classNames(
                 "z-30 flex flex-col items-center gap-2 font-semibold",
                 {
-                  "text-purple-600": !fileToUpload,
-                  "text-white": fileToUpload,
+                  "text-purple-600": !hasProfileImage,
+                  "text-white": hasProfileImage,
                 }
               )}
             >
@@ -107,13 +130,13 @@ export function ProfileForm() {
               >
                 <path
                   className={classNames({
-                    "fill-purple-600": !fileToUpload,
-                    "fill-white": fileToUpload,
+                    "fill-purple-600": !hasProfileImage,
+                    "fill-white": hasProfileImage,
                   })}
                   d="M33.75 6.25H6.25a2.5 2.5 0 00-2.5 2.5v22.5a2.5 2.5 0 002.5 2.5h27.5a2.5 2.5 0 002.5-2.5V8.75a2.5 2.5 0 00-2.5-2.5zm0 2.5v16.055l-4.073-4.072a2.5 2.5 0 00-3.536 0l-3.125 3.125-6.875-6.875a2.5 2.5 0 00-3.535 0L6.25 23.339V8.75h27.5zM6.25 26.875l8.125-8.125 12.5 12.5H6.25v-4.375zm27.5 4.375h-3.34l-5.624-5.625L27.91 22.5l5.839 5.84v2.91zM22.5 15.625a1.875 1.875 0 113.75 0 1.875 1.875 0 01-3.75 0z"
                 ></path>
               </svg>
-              {fileToUpload ? "Change Image" : "+ Upload Image"}
+              {hasProfileImage ? "Change Image" : "+ Upload Image"}
             </p>
           </div>
           <span className="mt-2 block text-xs text-gray-700 md:max-w-[128px] lg:max-w-[215px]">

@@ -8,6 +8,9 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   swcMinify: true,
+  images: {
+    domains: ["uploadthing.com"],
+  },
 };
 
 module.exports = nextConfig;

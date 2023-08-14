@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Instrument_Sans } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "react-hot-toast";
 
 const instrument = Instrument_Sans({
   variable: "--font-instrument",
@@ -24,6 +25,7 @@ export default function RootLayout({
         <body
           className={`${instrument.variable} min-h-screen bg-gray-50 font-sans text-base font-normal text-gray-900 antialiased`}
         >
+          <Toaster position="top-right" />
           {children}
         </body>
       </html>
