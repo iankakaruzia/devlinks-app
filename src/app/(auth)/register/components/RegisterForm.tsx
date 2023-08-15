@@ -8,7 +8,14 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { z } from "zod";
+
+type SignUpError = {
+  errors: {
+    message: string;
+  }[];
+};
 
 const registerSchema = z
   .object({
@@ -66,6 +73,12 @@ export function RegisterForm() {
       console.log({ response });
       setPendingVerification(true);
     } catch (err) {
+      const hasErrorMessage = (err as SignUpError)?.errors?.length > 0;
+      toast.error(
+        hasErrorMessage
+          ? (err as SignUpError).errors[0].message
+          : "Something went wrong. Please check try again later."
+      );
       console.error(err);
     }
   });
@@ -89,6 +102,7 @@ export function RegisterForm() {
         router.push("/");
       }
     } catch (err) {
+      toast.error("Something went wrong. Please check your verification code.");
       console.error(err);
     }
   });
