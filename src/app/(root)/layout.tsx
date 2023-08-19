@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { NavLinks } from "./components/NavLinks";
+import { SignOutButton } from "./components/SignOutButton";
 
 export default function RootLayout({
   children,
@@ -28,22 +29,26 @@ export default function RootLayout({
 
         <NavLinks />
 
-        <Link
-          href="profile/ianka"
-          className="flex items-center justify-center self-stretch rounded-lg border border-solid border-purple-600 bg-transparent px-4 transition-colors hover:bg-purple-100"
-        >
-          <Image
-            src="/assets/images/icon-preview-header.svg"
-            height={20}
-            width={20}
-            alt="Preview"
-            className="md:hidden"
-          />
+        <div className="flex items-center gap-2 self-stretch">
+          <Link
+            href="profile/ianka"
+            className="flex h-full items-center justify-center rounded-lg border border-solid border-purple-600 bg-transparent px-4 transition-colors hover:bg-purple-100"
+          >
+            <Image
+              src="/assets/images/icon-preview-header.svg"
+              height={20}
+              width={20}
+              alt="Preview"
+              className="md:hidden"
+            />
 
-          <span className="hidden font-semibold text-purple-600 md:block">
-            Preview
-          </span>
-        </Link>
+            <span className="hidden font-semibold text-purple-600 md:block">
+              Preview
+            </span>
+          </Link>
+
+          <SignOutButton />
+        </div>
       </header>
 
       <div className="lg:flex lg:gap-6 lg:pl-6">

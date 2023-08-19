@@ -18,5 +18,10 @@ export default async function DetailsPage() {
     .from(profiles)
     .where(eq(profiles.userId, user.id));
 
+  if (profilesFound.length === 0) {
+    console.log("No profile found for user", user.id);
+    redirect("/");
+  }
+
   return <ProfileForm profile={profilesFound[0] as Profile} />;
 }
