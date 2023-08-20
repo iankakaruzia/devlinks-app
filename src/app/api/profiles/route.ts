@@ -34,5 +34,7 @@ export async function PATCH(request: Request) {
     );
   }
 
-  return NextResponse.json({}, { status: 204 });
+  return new Response(null, {
+    status: 204,
+  });
 }
