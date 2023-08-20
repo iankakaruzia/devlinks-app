@@ -17,14 +17,22 @@ export async function PATCH(request: Request) {
     userId,
   });
 
-  await db
-    .update(profiles)
-    .set({
-      ...(profile.email ? { email: profile.email } : {}),
-      ...(profile.firstName ? { firstName: profile.firstName } : {}),
-      ...(profile.lastName ? { lastName: profile.lastName } : {}),
-    })
-    .where(eq(profiles.userId, userId || ""));
+  try {
+    await db
+      .update(profiles)
+      .set({
+        ...(profile.email ? { email: profile.email } : {}),
+        ...(profile.firstName ? { firstName: profile.firstName } : {}),
+        ...(profile.lastName ? { lastName: profile.lastName } : {}),
+      })
+      .where(eq(profiles.userId, userId || ""));
+  } catch (error) {
+    console.error("Failed to update profile", { error, profile, userId });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 
-  return NextResponse.json({ userId, profile });
+  return NextResponse.json({}, { status: 204 });
 }

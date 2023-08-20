@@ -65,12 +65,32 @@ export function ProfileForm({ profile }: ProfileFormProps) {
       });
     }
 
-    await fetch("/api/profiles", {
-      method: "PATCH",
-      body: JSON.stringify({
-        ...data,
+    const hasChanges = Object.keys(data).some(
+      (key) => data[key as keyof typeof data] !== profile[key as keyof Profile]
+    );
+
+    if (!hasChanges) {
+      return;
+    }
+
+    await toast.promise(
+      fetch("/api/profiles", {
+        method: "PATCH",
+        body: JSON.stringify({
+          ...data,
+        }),
       }),
-    });
+      {
+        loading: "Updating profile information...",
+        success: <b>Successfully updated the profile information</b>,
+        error: (
+          <b>
+            Something went wrong when updating the profile information, please
+            try again later...
+          </b>
+        ),
+      }
+    );
   });
 
   const hasProfileImage = fileToUpload || profile.profilePicture;
