@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 import type { Profile } from "@/app/types/profile";
 
 const schema = z.object({
-  email: z.string().email().optional(),
+  email: z.string().email().optional().or(z.literal("")),
   firstName: z.string().min(1, "Can't be empty"),
   lastName: z.string().min(1, "Can't be empty"),
 });
