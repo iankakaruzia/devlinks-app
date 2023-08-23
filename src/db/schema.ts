@@ -18,12 +18,14 @@ export const profiles = mysqlTable(
     lastName: varchar("lastName", { length: 256 }),
     email: varchar("email", { length: 256 }), // Initially the same from Clerk
     profilePicture: varchar("profilePicture", { length: 256 }),
+    slug: varchar("slug", { length: 256 }).notNull(),
     createdAt: timestamp("createdAt").notNull().defaultNow(),
     updatedAt: timestamp("updatedAt").notNull().defaultNow().onUpdateNow(),
   },
   (profile) => ({
     emailIndex: index("profiles__email__idx").on(profile.email),
     userIdIndex: uniqueIndex("profiles__userId__idx").on(profile.userId),
+    slugIndex: uniqueIndex("profiles__slug__idx").on(profile.slug),
   })
 );
 

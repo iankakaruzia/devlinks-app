@@ -48,12 +48,16 @@ export async function POST(req: Request) {
     });
   }
 
+  const email = evt.data.email_addresses[0].email_address;
+  const slug = generateSlug(email);
+
   // Handle the webhook
   const eventType: EventType = evt.type;
   if (eventType === "user.created") {
     await db.insert(profiles).values({
       userId: evt.data.id,
-      email: evt.data.email_addresses[0].email_address,
+      email,
+      slug,
     });
   }
   return new Response("", {
@@ -68,3 +72,18 @@ type Event = {
 };
 
 type EventType = "user.created" | "*";
+
+function generateRandomNumbers(): string {
+  const randomNumbers = [];
+  for (let i = 0; i < 3; i++) {
+    randomNumbers.push(Math.floor(Math.random() * 10).toString());
+  }
+  return randomNumbers.join("");
+}
+
+function generateSlug(email: string): string {
+  const [username] = email.split("@");
+  const randomNumbers = generateRandomNumbers();
+  const slug = `${username}-${randomNumbers}`;
+  return slug;
+}
