@@ -1,27 +1,8 @@
-import { db } from "@/db";
 import { ProfileForm } from "./components/ProfileForm";
-import { profiles } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { currentUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
-import type { Profile } from "@/app/types/profile";
+import { trpcServerClient } from "@/utils/trpc-server-client";
 
 export default async function DetailsPage() {
-  const user = await currentUser();
+  const profile = await trpcServerClient.profile.getProfileInfo();
 
-  if (!user) {
-    redirect("/login");
-  }
-
-  const profilesFound = await db
-    .select()
-    .from(profiles)
-    .where(eq(profiles.userId, user.id));
-
-  if (profilesFound.length === 0) {
-    console.log("No profile found for user", user.id);
-    redirect("/");
-  }
-
-  return <ProfileForm profile={profilesFound[0] as Profile} />;
+  return <ProfileForm initialProfile={profile} />;
 }

@@ -11,6 +11,7 @@ import classNames from "classnames";
 import { useUploadThing } from "@/utils/uploadthing";
 import toast from "react-hot-toast";
 import type { Profile } from "@/app/types/profile";
+import { type RouterOutputs, trpc } from "@/utils/trpc";
 
 const schema = z.object({
   email: z.string().email().optional().or(z.literal("")),
@@ -19,10 +20,15 @@ const schema = z.object({
 });
 
 type ProfileFormProps = {
-  profile: Profile;
+  initialProfile: RouterOutputs["profile"]["getProfileInfo"];
 };
 
-export function ProfileForm({ profile }: ProfileFormProps) {
+export function ProfileForm({ initialProfile }: ProfileFormProps) {
+  const getProfileInfo = trpc.profile.getProfileInfo.useQuery(undefined, {
+    initialData: initialProfile,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
   const {
     register,
     handleSubmit,
@@ -31,9 +37,9 @@ export function ProfileForm({ profile }: ProfileFormProps) {
     resolver: zodResolver(schema),
     mode: "all",
     defaultValues: {
-      email: profile.email ?? "",
-      firstName: profile.firstName ?? "",
-      lastName: profile.lastName ?? "",
+      email: getProfileInfo.data.email ?? "",
+      firstName: getProfileInfo.data.firstName ?? "",
+      lastName: getProfileInfo.data.lastName ?? "",
     },
   });
   const [fileToUpload, setFileToUpload] = useState<File | null>(null);
@@ -52,7 +58,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   const { startUpload } = useUploadThing("profileUploader");
 
   const handleSave = handleSubmit(async (data) => {
-    if (fileToUpload && !profile.profilePicture) {
+    if (fileToUpload && !getProfileInfo.data.profilePicture) {
       await toast.promise(startUpload([fileToUpload]), {
         loading: "Uploading profile picture...",
         success: <b>Successfully uploaded the profile picture</b>,
@@ -66,7 +72,9 @@ export function ProfileForm({ profile }: ProfileFormProps) {
     }
 
     const hasChanges = Object.keys(data).some(
-      (key) => data[key as keyof typeof data] !== profile[key as keyof Profile]
+      (key) =>
+        data[key as keyof typeof data] !==
+        getProfileInfo.data[key as keyof Profile]
     );
 
     if (!hasChanges) {
@@ -93,7 +101,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
     );
   });
 
-  const hasProfileImage = fileToUpload || profile.profilePicture;
+  const hasProfileImage = fileToUpload || getProfileInfo.data.profilePicture;
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -124,7 +132,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                 src={
                   fileToUpload
                     ? URL.createObjectURL(fileToUpload)
-                    : (profile.profilePicture as string)
+                    : (getProfileInfo.data.profilePicture as string)
                 }
                 fill
                 alt="Profile picture"
