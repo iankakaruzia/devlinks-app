@@ -12,10 +12,13 @@ import { useUploadThing } from "@/utils/uploadthing";
 import toast from "react-hot-toast";
 import type { Profile } from "@/app/types/profile";
 
+const slugRegex = new RegExp(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+
 const schema = z.object({
   email: z.string().email().optional().or(z.literal("")),
   firstName: z.string().min(1, "Can't be empty"),
   lastName: z.string().min(1, "Can't be empty"),
+  slug: z.string().regex(slugRegex, "Invalid slug format"),
 });
 
 type ProfileFormProps = {
@@ -34,6 +37,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
       email: profile.email ?? "",
       firstName: profile.firstName ?? "",
       lastName: profile.lastName ?? "",
+      slug: profile.slug ?? "",
     },
   });
   const [fileToUpload, setFileToUpload] = useState<File | null>(null);
@@ -182,6 +186,15 @@ export function ProfileForm({ profile }: ProfileFormProps) {
             id="lastName"
             {...register("lastName")}
             error={errors.lastName?.message as string}
+          />
+          <Input
+            className="bg-white md:w-80 lg:w-[400px]"
+            containerClassName="md:flex md:items-center md:justify-between"
+            labelClassName="md:text-base md:text-gray-700"
+            label="Slug*"
+            id="slug"
+            {...register("slug")}
+            error={errors.slug?.message as string}
           />
           <Input
             className="bg-white md:w-80 lg:w-[400px]"

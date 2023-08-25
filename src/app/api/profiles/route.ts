@@ -24,6 +24,7 @@ export async function PATCH(request: Request) {
         ...(profile.email ? { email: profile.email } : {}),
         ...(profile.firstName ? { firstName: profile.firstName } : {}),
         ...(profile.lastName ? { lastName: profile.lastName } : {}),
+        ...(profile.slug ? { slug: profile.slug } : {}),
       })
       .where(eq(profiles.userId, userId || ""));
   } catch (error) {
