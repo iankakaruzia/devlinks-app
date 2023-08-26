@@ -10,7 +10,12 @@ export function SignOutButton() {
   }
 
   return (
-    <button onClick={handleSignOut} aria-label="Logout" className="group p-2">
+    <button
+      onClick={handleSignOut}
+      aria-label="Logout"
+      className="group p-2"
+      data-testid="logout"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         x="0"

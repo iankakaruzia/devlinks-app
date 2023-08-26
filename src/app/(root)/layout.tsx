@@ -33,6 +33,7 @@ export default function RootLayout({
           <Link
             href="profile/ianka"
             className="flex h-full items-center justify-center rounded-lg border border-solid border-purple-600 bg-transparent px-4 transition-colors hover:bg-purple-100"
+            data-testid="preview"
           >
             <Image
               src="/assets/images/icon-preview-header.svg"

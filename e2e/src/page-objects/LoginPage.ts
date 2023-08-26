@@ -22,8 +22,9 @@ export class LoginPage extends BasePage {
   }
 
   async login(username: string, password: string) {
-    await this.emailInput.type(username);
-    await this.passwordInput.type(password);
+    await this.emailInput.fill(username);
+    await this.passwordInput.fill(password);
+    await this.wait(300);
     await this.submitButton.click();
   }
 

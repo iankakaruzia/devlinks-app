@@ -18,10 +18,8 @@ test.describe("Login", () => {
     await expect(page).toHaveURL("/register");
   });
 
-  test.skip("should login with valid credentials", async ({ page }) => {
+  test("should login with valid credentials", async ({ page }) => {
     await loginPage.login(credentials.email, credentials.password);
-
-    await loginPage.wait(2000);
 
     await expect(page).toHaveURL("/");
   });

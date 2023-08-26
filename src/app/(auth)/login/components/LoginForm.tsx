@@ -21,7 +21,7 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     mode: "all",
@@ -29,6 +29,7 @@ export function LoginForm() {
   const router = useRouter();
 
   const handleLogin = handleSubmit(async (data) => {
+    console.log({ isLoaded });
     if (!isLoaded) {
       return;
     }
@@ -87,7 +88,9 @@ export function LoginForm() {
         }
         error={errors.password?.message as string}
       />
-      <Button type="submit">Login</Button>
+      <Button type="submit" disabled={!isValid}>
+        Login
+      </Button>
     </form>
   );
 }

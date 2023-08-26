@@ -18,6 +18,7 @@ export function NavLinks() {
             "bg-purple-100": isHome,
           }
         )}
+        data-testid="links"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -59,6 +60,7 @@ export function NavLinks() {
             "bg-purple-100": !isHome,
           }
         )}
+        data-testid="profile"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
